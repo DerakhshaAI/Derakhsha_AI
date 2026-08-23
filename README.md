@@ -1,1 +1,0 @@
-# Derakhsha_AI
