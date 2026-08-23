@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>درخشا · مدیریت اسناد و دانش</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #0b0e1a;
+            color: #e8edf5;
+            padding: 1.5rem;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* ----- هدر با لوگو ----- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 2.5rem;
+            border-bottom: 2px solid #2a3a5e;
+            padding-bottom: 1.2rem;
+        }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .logo-svg {
+            width: 70px;
+            height: 70px;
+        }
+        .logo-svg svg {
+            width: 100%;
+            height: 100%;
+        }
+        .logo h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, #70e0ff, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+        .logo span {
+            font-size: 0.95rem;
+            color: #8899bb;
+            display: block;
+            -webkit-text-fill-color: #8899bb;
+        }
+        .badge {
+            background: #1e2a47;
+            padding: 0.5rem 1.5rem;
+            border-radius: 40px;
+            border: 1px solid #4a6a9a;
+            font-size: 0.9rem;
+        }
+
+        /* لایه‌بندی اصلی */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 2rem;
+        }
+        @media (max-width: 900px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* بخش گزینه‌ها */
+        .features-panel {
+            background: #101725;
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid #2a3a5e;
+            height: fit-content;
+        }
+        .features-panel h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .feature-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            margin-bottom: 0.5rem;
+            background: #1a2338;
+            border-radius: 12px;
+            border-right: 4px solid transparent;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .feature-item:hover {
+            background: #222d48;
+            border-right-color: #70e0ff;
+        }
+        .feature-item .info {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .feature-item .info i {
+            width: 1.8rem;
+            color: #a78bfa;
+            font-size: 1.2rem;
+        }
+        .feature-item .info .name {
+            font-weight: 500;
+        }
+        .feature-item .info .desc {
+            font-size: 0.8rem;
+            color: #8899bb;
+            margin-right: 0.5rem;
+        }
+        .feature-item .status {
+            font-size: 0.8rem;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            background: #2a3a5e;
+            color: #b0caf5;
+            transition: 0.2s;
+        }
+        .feature-item .status.active {
+            background: #2a6a4a;
+            color: #8fdfb0;
+        }
+        .feature-item .status.inactive {
+            background: #5a2a3a;
+            color: #f5a0b0;
+        }
+
+        /* بخش توضیح گزینه */
+        #feature-detail {
+            margin-top: 1.5rem;
+            background: #0f1625;
+            padding: 1.2rem;
+            border-radius: 16px;
+            border: 1px solid #2a3a5e;
+            min-height: 80px;
+        }
+        #feature-detail h4 {
+            color: #70e0ff;
+            margin-bottom: 0.4rem;
+        }
+        #feature-detail p {
+            color: #b0c5e5;
+            font-size: 0.95rem;
+        }
+
+        /* بخش اسناد */
+        .doc-section {
+            background: #101725;
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid #2a3a5e;
+            margin-top: 1.5rem;
+        }
+        .doc-section h3 {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: #a78bfa;
+        }
+        .doc-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+            margin: 1rem 0;
+        }
+        .doc-form input, .doc-form textarea, .doc-form select {
+            background: #1a2338;
+            border: 1px solid #3a4a6e;
+            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            color: #e8edf5;
+            font-size: 0.95rem;
+            outline: none;
+            transition: 0.2s;
+        }
+        .doc-form input:focus, .doc-form textarea:focus {
+            border-color: #70e0ff;
+        }
+        .doc-form textarea {
+            grid-column: 1 / -1;
+            resize: vertical;
+            min-height: 80px;
+        }
+        .doc-form .full-width {
+            grid-column: 1 / -1;
+        }
+        .doc-form button {
+            background: #2a4a7a;
+            border: none;
+            padding: 0.7rem 1.8rem;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            justify-content: center;
+        }
+        .doc-form button:hover {
+            background: #3a6aaa;
+        }
+
+        .doc-list {
+            margin-top: 1.2rem;
+            max-height: 300px;
+            overflow-y: auto;
+            background: #0b0e1a;
+            border-radius: 12px;
+            padding: 0.5rem;
+        }
+        .doc-item {
+            background: #1a2338;
+            padding: 0.7rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border-right: 3px solid #a78bfa;
+        }
+        .doc-item .title {
+            font-weight: 600;
+            color: #e8edf5;
+        }
+        .doc-item .meta {
+            font-size: 0.8rem;
+            color: #8899bb;
+            margin-top: 0.2rem;
+        }
+        .doc-item .tags {
+            display: inline-block;
+            background: #2a3a5e;
+            padding: 0.1rem 0.6rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            margin-left: 0.4rem;
+        }
+
+        /* درخت */
+        .tree-wrapper {
+            background: #101725;
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid #2a3a5e;
+        }
+        #tree-container {
+            width: 100%;
+            height: 440px;
+            overflow: visible;
+        }
+        .tree-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
+        .tree-controls input {
+            flex: 2;
+            min-width: 160px;
+            background: #1a2338;
+            border: 1px solid #3a4a6e;
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
+            color: #e8edf5;
+            outline: none;
+        }
+        .tree-controls input:focus {
+            border-color: #70e0ff;
+        }
+        .tree-controls button {
+            background: #2a4a7a;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .tree-controls button:hover {
+            background: #3a6aaa;
+        }
+        .tree-controls .btn-secondary {
+            background: #2a2a4a;
+        }
+        .tree-controls .btn-secondary:hover {
+            background: #3a3a6a;
+        }
+        #search-status {
+            margin-top: 0.7rem;
+            padding: 0.4rem 1.2rem;
+            background: #1a2338;
+            border-radius: 30px;
+            display: inline-block;
+            font-size: 0.9rem;
+            color: #a0b8dd;
+        }
+
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            color: #667799;
+            border-top: 1px solid #1e2a47;
+            padding-top: 1.5rem;
+        }
+
+        .new-tag {
+            background: #fbbf24;
+            color: #0b0e1a;
+            font-size: 0.55rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 20px;
+            font-weight: 700;
+            margin-right: 0.4rem;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <div class="logo-area">
+            <!-- لوگوی ترکیبی درخت + نورون (SVG) -->
+            <div class="logo-svg">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <!-- تنه درخت -->
+                    <rect x="45" y="60" width="10" height="25" fill="#5a3e2b" rx="2" />
+                    <!-- شاخه‌ها (دندریت‌ها) -->
+                    <path d="M50 60 Q30 40 15 30" stroke="#70e0ff" stroke-width="3" fill="none" />
+                    <path d="M50 60 Q70 40 85 30" stroke="#70e0ff" stroke-width="3" fill="none" />
+                    <path d="M50 50 Q35 25 25 10" stroke="#70e0ff" stroke-width="2.5" fill="none" />
+                    <path d="M50 50 Q65 25 75 10" stroke="#70e0ff" stroke-width="2.5" fill="none" />
+                    <path d="M50 40 Q20 20 5 5" stroke="#70e0ff" stroke-width="2" fill="none" />
+                    <path d="M50 40 Q80 20 95 5" stroke="#70e0ff" stroke-width="2" fill="none" />
+                    <!-- سیناپس‌ها (نقاط نورانی) -->
+                    <circle cx="15" cy="30" r="4" fill="#a78bfa" />
+                    <circle cx="85" cy="30" r="4" fill="#a78bfa" />
+                    <circle cx="25" cy="10" r="3" fill="#fbbf24" />
+                    <circle cx="75" cy="10" r="3" fill="#fbbf24" />
+                    <circle cx="5" cy="5" r="3" fill="#34d399" />
+                    <circle cx="95" cy="5" r="3" fill="#34d399" />
+                    <!-- هسته نورون (در مرکز) -->
+                    <circle cx="50" cy="50" r="12" fill="#1e2a47" stroke="#a78bfa" stroke-width="2" />
+                    <circle cx="50" cy="50" r="6" fill="#70e0ff" opacity="0.6" />
+                    <!-- برگ‌های درخت (اختیاری) -->
+                    <path d="M15 30 Q10 25 8 32 Q12 35 15 30" fill="#34d399" opacity="0.5" />
+                    <path d="M85 30 Q90 25 92 32 Q88 35 85 30" fill="#34d399" opacity="0.5" />
+                </svg>
+            </div>
+            <div class="logo">
+                <h1>درخشا</h1>
+                <span>معماری مغز‌محور · جنگل دانش و اسناد</span>
+            </div>
+        </div>
+        <div class="badge"><i class="fas fa-cogs"></i> v0.8 · مدیریت اسناد</div>
+    </header>
+
+    <div class="main-grid">
+        <!-- بخش گزینه‌ها -->
+        <div class="features-panel">
+            <h2><i class="fas fa-list-ul"></i> قابلیت‌ها</h2>
+            <div id="feature-list"></div>
+            <div id="feature-detail">
+                <h4>🔍 یک گزینه را انتخاب کنید</h4>
+                <p>برای مشاهده توضیحات کامل و وضعیت، روی هر گزینه کلیک کنید.</p>
+            </div>
+        </div>
+
+        <!-- بخش راست: درخت + اسناد -->
+        <div>
+            <div class="tree-wrapper">
+                <div id="tree-container"></div>
+                <div class="tree-controls">
+                    <input type="text" id="search-input" placeholder="جستجوی مفهوم..." />
+                    <button id="search-btn"><i class="fas fa-search"></i> جستجو</button>
+                    <button id="reset-btn" class="btn-secondary"><i class="fas fa-undo-alt"></i> بازنشانی</button>
+                </div>
+                <div id="search-status"><i class="fas fa-arrows-alt-h"></i> آماده</div>
+            </div>
+
+            <!-- بخش مدیریت اسناد -->
+            <div class="doc-section" id="doc-section">
+                <h3><i class="fas fa-file-alt"></i> قشر اسناد · افزودن مقاله/کتاب</h3>
+                <div class="doc-form">
+                    <input type="text" id="doc-title" placeholder="عنوان سند" />
+                    <input type="text" id="doc-subject" placeholder="موضوع (مثلاً زیست‌شناسی)" />
+                    <input type="text" id="doc-keywords" placeholder="کلیدواژه‌ها (مثلاً قلب، سلول)" class="full-width" />
+                    <textarea id="doc-content" placeholder="متن مقاله یا کتاب را اینجا وارد کنید..."></textarea>
+                    <button id="add-doc-btn"><i class="fas fa-plus-circle"></i> افزودن به جنگل دانش</button>
+                </div>
+                <div id="doc-list" class="doc-list">
+                    <!-- اسناد ذخیره شده در اینجا نمایش داده می‌شوند -->
+                    <p style="color:#667799; text-align:center;">هیچ سندی ثبت نشده است.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <i class="fas fa-code"></i> درخشا · معماری هوش مصنوعی · با ❤️ و <i class="fas fa-tree"></i>
+    </footer>
+</div>
+
+<script>
+    (function() {
+        // ---- لیست کامل قابلیت‌ها (با اضافه شدن Document Cortex) ----
+        const features = [
+            { id: 'modular', name: 'معماری ماژولار', icon: 'fa-microchip', desc: 'تقسیم سیستم به قشرهای تخصصی و مستقل', new: false },
+            { id: 'input', name: 'قشر ورودی', icon: 'fa-input', desc: 'دریافت، پاکسازی و آماده‌سازی متن', new: false },
+            { id: 'language', name: 'درخت زبان', icon: 'fa-tree', desc: 'تبدیل جمله به ساختار درختی و بازسازی', new: false },
+            { id: 'forest', name: 'جنگل دانش', icon: 'fa-forest', desc: 'درخت‌های تخصصی برای موضوعات مختلف', new: false },
+            { id: 'pyramid', name: 'جستجوی هرمی', icon: 'fa-search-plus', desc: 'حرکت جزء → کل برای یافتن زمینه', new: false },
+            { id: 'tree-search', name: 'جستجوی درختی', icon: 'fa-search-minus', desc: 'حرکت کل → جزء برای رسیدن به جزئیات', new: false },
+            { id: 'cross', name: 'ارتباط بین‌درختی', icon: 'fa-link', desc: 'اتصال مفاهیم مرتبط میان حوزه‌ها', new: false },
+            { id: 'meaning', name: 'تشکیل معنی', icon: 'fa-comment', desc: 'ترکیب کلمه، زمینه، ساختار و روابط', new: false },
+            { id: 'reason', name: 'استدلال و اعتبارسنجی', icon: 'fa-check-double', desc: 'بررسی مسیر رسیدن به نتیجه', new: false },
+            { id: 'learn', name: 'یادگیری از تجربه', icon: 'fa-brain', desc: 'تقویت/تضعیف مسیرها بر اساس نتایج', new: false },
+            { id: 'neuron', name: 'Tree-Neuron', icon: 'fa-project-diagram', desc: 'هر درخت به عنوان واحد پردازشی مستقل', new: false },
+            { id: 'monitor', name: 'مانیتورینگ رنگی', icon: 'fa-eye', desc: 'نمایش مسیر پردازش در ترمینال', new: false },
+            { id: 'temporal', name: 'قشر زمانی', icon: 'fa-clock', desc: 'ذخیره توالی علی و پیش‌بینی روندها', new: true },
+            { id: 'stochastic', name: 'گره‌های احتمالاتی', icon: 'fa-random', desc: 'جستجوی موازی با ضرایب اطمینان', new: true },
+            { id: 'pruning', name: 'هرس و پیوند پویا', icon: 'fa-cut', desc: 'فشرده‌سازی و پیوند موقت درختان', new: true },
+            { id: 'meta', name: 'قشر فراشناخت', icon: 'fa-robot', desc: 'ناظر بر پردازش و تغییر استراتژی', new: true },
+            { id: 'analogical', name: 'استدلال قیاسی', icon: 'fa-arrow-right-arrow-left', desc: 'انتقال الگوی روابط بین حوزه‌ها', new: true },
+            { id: 'metrics', name: 'معیارهای اندازه‌گیری', icon: 'fa-chart-line', desc: 'هزینه، سرعت، توضیح‌دهندگی و خلاقیت', new: true },
+            { id: 'document', name: 'قشر اسناد (Document Cortex)', icon: 'fa-file-alt', desc: 'مدیریت و جستجوی متون، کتاب‌ها و مقالات', new: true }
+        ];
+
+        let statuses = {};
+        features.forEach(f => statuses[f.id] = false);
+
+        // ---- تولید گزینه‌ها ----
+        const listContainer = document.getElementById('feature-list');
+        features.forEach(f => {
+            const item = document.createElement('div');
+            item.className = 'feature-item';
+            item.dataset.id = f.id;
+            item.innerHTML = `
+                <div class="info">
+                    <i class="fas ${f.icon}"></i>
+                    <span class="name">${f.name} ${f.new ? '<span class="new-tag">جدید</span>' : ''}</span>
+                    <span class="desc">${f.desc}</span>
+                </div>
+                <span class="status inactive" id="status-${f.id}">غیرفعال</span>
+            `;
+            item.addEventListener('click', function() {
+                const id = this.dataset.id;
+                statuses[id] = !statuses[id];
+                updateStatusUI(id);
+                showDetail(id);
+                if (id === 'pyramid' || id === 'tree-search') {
+                    document.getElementById('search-status').innerHTML = 
+                        `<i class="fas fa-${statuses[id] ? 'check-circle' : 'info-circle'}" style="color:${statuses[id] ? '#34d399' : '#70e0ff'};"></i> 
+                         جستجوی ${statuses[id] ? 'فعال' : 'غیرفعال'} شد.`;
+                }
+                if (id === 'document') {
+                    document.getElementById('doc-section').style.display = statuses[id] ? 'block' : 'block';
+                }
+            });
+            listContainer.appendChild(item);
+        });
+
+        function updateStatusUI(id) {
+            const el = document.getElementById(`status-${id}`);
+            if (statuses[id]) {
+                el.className = 'status active';
+                el.textContent = 'فعال';
+            } else {
+                el.className = 'status inactive';
+                el.textContent = 'غیرفعال';
+            }
+        }
+
+        function showDetail(id) {
+            const f = features.find(x => x.id === id);
+            if (!f) return;
+            const detailDiv = document.getElementById('feature-detail');
+            const statusText = statuses[id] ? 'فعال' : 'غیرفعال';
+            detailDiv.innerHTML = `
+                <h4><i class="fas ${f.icon}"></i> ${f.name} ${f.new ? '<span class="new-tag">جدید</span>' : ''}</h4>
+                <p>${f.desc}</p>
+                <p style="margin-top:0.5rem; color:#a78bfa;">وضعیت: <strong>${statusText}</strong></p>
+                <p style="font-size:0.85rem; color:#8899bb;">
+                    ${statuses[id] ? '✅ این قابلیت در معماری فعال است.' : '❌ این قابلیت غیرفعال است (برای فعال‌سازی کلیک کنید).'}
+                </p>
+            `;
+        }
+
+        // ---- مدیریت اسناد (localStorage) ----
+        let documents = JSON.parse(localStorage.getItem('drakhsha_docs') || '[]');
+
+        function renderDocList() {
+            const container = document.getElementById('doc-list');
+            if (documents.length === 0) {
+                container.innerHTML = '<p style="color:#667799; text-align:center;">هیچ سندی ثبت نشده است.</p>';
+                return;
+            }
+            container.innerHTML = documents.map((doc, idx) => `
+                <div class="doc-item">
+                    <div class="title">${doc.title}</div>
+                    <div class="meta">موضوع: ${doc.subject} | کلیدواژه‌ها: ${doc.keywords.join('، ')}</div>
+                    <div style="font-size:0.85rem; color:#b0c5e5; margin-top:0.3rem;">${doc.content.substring(0, 120)}${doc.content.length > 120 ? '...' : ''}</div>
+                    <button onclick="removeDoc(${idx})" style="background:#5a2a3a; border:none; color:white; padding:0.2rem 0.8rem; border-radius:20px; margin-top:0.4rem; cursor:pointer;"><i class="fas fa-trash"></i> حذف</button>
+                </div>
+            `).join('');
+        }
+
+        window.removeDoc = function(index) {
+            documents.splice(index, 1);
+            localStorage.setItem('drakhsha_docs', JSON.stringify(documents));
+            renderDocList();
+            updateDocStatus('سند حذف شد');
+        };
+
+        function updateDocStatus(msg) {
+            document.getElementById('search-status').innerHTML = `<i class="fas fa-info-circle"></i> ${msg}`;
+        }
+
+        document.getElementById('add-doc-btn').addEventListener('click', function() {
+            const title = document.getElementById('doc-title').value.trim();
+            const subject = document.getElementById('doc-subject').value.trim();
+            const keywordsRaw = document.getElementById('doc-keywords').value.trim();
+            const content = document.getElementById('doc-content').value.trim();
+
+            if (!title || !subject || !keywordsRaw || !content) {
+                updateDocStatus('⚠️ همه فیلدها باید پر شوند.');
+                return;
+            }
+
+            const keywords = keywordsRaw.split(/[،,،\s]+/).filter(k => k.length > 0);
+            const newDoc = { title, subject, keywords, content, date: new Date().toLocaleString() };
+            documents.push(newDoc);
+            localStorage.setItem('drakhsha_docs', JSON.stringify(documents));
+            renderDocList();
+
+            // پاک کردن فرم
+            document.getElementById('doc-title').value = '';
+            document.getElementById('doc-subject').value = '';
+            document.getElementById('doc-keywords').value = '';
+            document.getElementById('doc-content').value = '';
+            updateDocStatus(`✅ سند «${title}» با موفقیت به جنگل دانش افزوده شد.`);
+        });
+
+        // بارگذاری اولیه لیست اسناد
+        renderDocList();
+
+        // ---- درخت D3 (همان کد قبلی با بهبود) ----
+        const treeData = {
+            name: "جهان دانش",
+            children: [
+                {
+                    name: "زیست‌شناسی",
+                    children: [
+                        { name: "سلول", children: [{ name: "هسته" }, { name: "میتوکندری" }, { name: "کلروپلاست" }] },
+                        { name: "قلب", children: [{ name: "دهلیز" }, { name: "بطن" }, { name: "دریچه" }] },
+                        { name: "فتوسنتز", children: [{ name: "کلروفیل" }, { name: "نور" }, { name: "CO₂" }] }
+                    ]
+                },
+                {
+                    name: "فیزیک",
+                    children: [
+                        { name: "مکانیک", children: [{ name: "قوانین نیوتن" }, { name: "کار و انرژی" }] },
+                        { name: "نور", children: [{ name: "موج" }, { name: "ذره" }] }
+                    ]
+                },
+                {
+                    name: "فناوری",
+                    children: [
+                        { name: "هوش مصنوعی", children: [{ name: "یادگیری عمیق" }, { name: "درخت تصمیم" }] },
+                        { name: "شبکه", children: [{ name: "اینترنت" }, { name: "بلاک‌چین" }] }
+                    ]
+                }
+            ]
+        };
+
+        let allNames = [];
+        function collect(node) {
+            allNames.push(node.name);
+            if (node.children) node.children.forEach(collect);
+        }
+        collect(treeData);
+
+        const width = document.getElementById('tree-container').clientWidth || 900;
+        const height = 420;
+        const margin = { top: 30, right: 80, bottom: 30, left: 80 };
+
+        function renderTree(data, highlightName = null) {
+            const container = document.getElementById('tree-container');
+            container.innerHTML = '';
+            const svg = d3.select(container)
+                .append('svg')
+                .attr('width', '100%')
+                .attr('height', height)
+                .attr('viewBox', `0 0 ${width} ${height}`)
+                .style('background', 'transparent');
+
+            const g = svg.append('g')
+                .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+            const root = d3.hierarchy(data);
+            const treeLayout = d3.tree()
+                .size([width - margin.left - margin.right, height - margin.top - margin.bottom]);
+            const tree = treeLayout(root);
+
+            g.append('g').selectAll('path')
+                .data(tree.links())
+                .enter()
+                .append('path')
+                .attr('d', d3.linkHorizontal().x(d => d.y).y(d => d.x))
+                .attr('fill', 'none')
+                .attr('stroke', '#3a4a6e')
+                .attr('stroke-width', 1.5);
+
+            const nodeGroup = g.append('g');
+            nodeGroup.selectAll('circle')
+                .data(tree.descendants())
+                .enter()
+                .append('circle')
+                .attr('cx', d => d.y)
+                .attr('cy', d => d.x)
+                .attr('r', 8)
+                .attr('fill', d => {
+                    if (highlightName && d.data.name === highlightName) return '#fbbf24';
+                    if (highlightName) {
+                        let isPath = false;
+                        let node = d;
+                        while (node) {
+                            if (node.data.name === highlightName) { isPath = true; break; }
+                            node = node.parent;
+                        }
+                        if (isPath) return '#fbbf24';
+                        const descendants = d.descendants ? d.descendants() : [];
+                        for (let child of descendants) {
+                            if (child.data.name === highlightName) { isPath = true; break; }
+                        }
+                        if (isPath) return '#fbbf24';
+                        return '#4a7aaa';
+                    }
+                    return '#4a7aaa';
+                })
+                .attr('stroke', '#70e0ff')
+                .attr('stroke-width', 1.5)
+                .style('cursor', 'pointer')
+                .on('click', function(event, d) {
+                    document.getElementById('search-input').value = d.data.name;
+                    performSearch(d.data.name);
+                });
+
+            g.append('g').selectAll('text')
+                .data(tree.descendants())
+                .enter()
+                .append('text')
+                .attr('x', d => d.y)
+                .attr('y', d => d.x - 14)
+                .attr('text-anchor', 'middle')
+                .attr('font-size', '11px')
+                .attr('fill', '#c8daf5')
+                .style('font-family', 'Segoe UI, sans-serif')
+                .style('pointer-events', 'none')
+                .text(d => d.data.name);
+        }
+
+        function performSearch(query) {
+            if (!query.trim()) {
+                document.getElementById('search-status').innerHTML = '<i class="fas fa-info-circle"></i> لطفاً یک مفهوم وارد کنید.';
+                renderTree(treeData);
+                return;
+            }
+            const trimmed = query.trim();
+            let found = false;
+            let foundName = null;
+            function find(node) {
+                if (node.name.toLowerCase() === trimmed.toLowerCase()) {
+                    foundName = node.name;
+                    found = true;
+                    return true;
+                }
+                if (node.children) {
+                    for (let child of node.children) {
+                        if (find(child)) return true;
+                    }
+                }
+                return false;
+            }
+            find(treeData);
+
+            // همچنین در اسناد جستجو کنیم
+            const docResults = documents.filter(doc => 
+                doc.title.includes(trimmed) || 
+                doc.subject.includes(trimmed) || 
+                doc.keywords.some(k => k.includes(trimmed))
+            );
+
+            if (found) {
+                document.getElementById('search-status').innerHTML = 
+                    `<i class="fas fa-check-circle" style="color:#34d399;"></i> یافت شد: «<strong style="color:#fbbf24;">${foundName}</strong>» · مسیر هرمی و درختی نمایش داده شد.`;
+                renderTree(treeData, foundName);
+            } else {
+                document.getElementById('search-status').innerHTML = 
+                    `<i class="fas fa-exclamation-triangle" style="color:#f87171;"></i> «${trimmed}» در درخت یافت نشد.`;
+                renderTree(treeData);
+            }
+
+            // نمایش نتایج اسناد
+            if (docResults.length > 0) {
+                let msg = `📄 ${docResults.length} سند مرتبط یافت شد: `;
+                docResults.forEach(d => msg += `«${d.title}» (${d.subject}) `);
+                document.getElementById('search-status').innerHTML += `<br/><span style="color:#a78bfa;">${msg}</span>`;
+            }
+        }
+
+        // رویدادهای جستجو
+        document.getElementById('search-btn').addEventListener('click', function() {
+            performSearch(document.getElementById('search-input').value);
+        });
+        document.getElementById('search-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') document.getElementById('search-btn').click();
+        });
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('search-status').innerHTML = '<i class="fas fa-arrows-alt-h"></i> آماده';
+            renderTree(treeData);
+        });
+
+        // نمایش پیش‌فرض اولین گزینه
+        if (features.length) {
+            showDetail(features[0].id);
+        }
+
+        // رندر اولیه درخت
+        renderTree(treeData);
+
+        // نمایش بخش اسناد به صورت پیش‌فرض
+        document.getElementById('doc-section').style.display = 'block';
+    })();
+</script>
+
+</body>
+</html>
