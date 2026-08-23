@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<title>Derakhsha — جنگل دانش هوشمند</title>
+<style>
+  body {
+    background: #04070f;
+    color: #dff9ff;
+    font-family: "Vazirmatn", sans-serif;
+    margin: 0;
+    direction: rtl;
+  }
+
+  header {
+    padding: 25px 40px;
+    border-bottom: 1px solid #0d1a2a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .logo svg {
+    width: 70px;
+    height: 70px;
+    filter: drop-shadow(0 0 10px #00ffc8);
+  }
+
+  .logo-text {
+    font-size: 32px;
+    font-weight: bold;
+    color: #00ffc8;
+    letter-spacing: 2px;
+  }
+
+  .subtitle {
+    margin-top: 5px;
+    color: #8fbfd9;
+    font-size: 14px;
+  }
+
+  main {
+    padding: 40px;
+    display: grid;
+    grid-template-columns: 2fr 1.2fr;
+    gap: 40px;
+  }
+
+  .card {
+    background: #0a1220;
+    border: 1px solid #1b3b5c;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 0 20px #00111f inset;
+  }
+
+  .card h2 {
+    margin-top: 0;
+    color: #00ffc8;
+    font-size: 22px;
+  }
+
+  .input-box {
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  textarea, input {
+    background: #07101c;
+    border: 1px solid #11334d;
+    border-radius: 8px;
+    padding: 10px;
+    color: #dff9ff;
+    font-size: 14px;
+  }
+
+  .module {
+    margin-bottom: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    background: #07101c;
+    border: 1px solid #11334d;
+  }
+
+  .module-title {
+    color: #00ffc8;
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+
+  .welcome-box, .bye-box {
+    background: #07101c;
+    border: 1px solid #11334d;
+    border-radius: 10px;
+    padding: 15px;
+    margin-top: 20px;
+  }
+
+  .welcome-box h3, .bye-box h3 {
+    color: #00ffc8;
+    margin-top: 0;
+  }
+
+  .list {
+    margin-top: 15px;
+    padding-left: 20px;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  footer {
+    padding: 20px 40px;
+    border-top: 1px solid #0d1a2a;
+    text-align: left;
+    direction: ltr;
+    color: #7aa6c4;
+    font-size: 13px;
+  }
+</style>
+</head>
+
+<body>
+
+<header>
+  <div>
+    <div class="logo">
+      <!-- لوگوی درخشا: درخت + نورون -->
+      <svg viewBox="0 0 200 200">
+        <defs>
+          <radialGradient id="neon">
+            <stop offset="0%" stop-color="#00ffc8"/>
+            <stop offset="100%" stop-color="#00334d"/>
+          </radialGradient>
+        </defs>
+
+        <circle cx="100" cy="100" r="40"
+                fill="url(#neon)"
+                stroke="#00ffc8" stroke-width="3"/>
+
+        <line x1="100" y1="60" x2="100" y2="25"
+              stroke="#00ffc8" stroke-width="3"/>
+        <line x1="100" y1="60" x2="70" y2="35"
+              stroke="#00ffc8" stroke-width="3"/>
+        <line x1="100" y1="60" x2="130" y2="35"
+              stroke="#00ffc8" stroke-width="3"/>
+
+        <line x1="100" y1="140" x2="100" y2="175"
+              stroke="#00ffc8" stroke-width="3"/>
+        <line x1="100" y1="140" x2="70" y2="165"
+              stroke="#00ffc8" stroke-width="3"/>
+        <line x1="100" y1="140" x2="130" y2="165"
+              stroke="#00ffc8" stroke-width="3"/>
+
+        <circle cx="70" cy="35" r="4" fill="#00ffc8"/>
+        <circle cx="130" cy="35" r="4" fill="#00ffc8"/>
+        <circle cx="70" cy="165" r="4" fill="#00ffc8"/>
+        <circle cx="130" cy="165" r="4" fill="#00ffc8"/>
+      </svg>
+
+      <div class="logo-text">Derakhsha</div>
+    </div>
+    <div class="subtitle">جنگل دانش ماژولار با درخت‌هایی که مثل نورون فکر می‌کنند.</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- وارد کردن جنگل دانش -->
+  <section class="card">
+    <h2>وارد کردن جنگل دانش</h2>
+    <p>درخشا می‌تواند هر جنگل دانشی را از طریق این فرم دریافت کند:</p>
+
+    <div class="input-box">
+      <label>نام درخت (مثلاً فیزیک، زیست، ریاضی):</label>
+      <input type="text" placeholder="مثال: فیزیک">
+
+      <label>موضوع اصلی:</label>
+      <input type="text" placeholder="مثال: نیروها">
+
+      <label>کلیدواژه‌ها:</label>
+      <textarea rows="4" placeholder="مثال: گرانش، اصطکاک، نرمال، کشش"></textarea>
+
+      <label>بخش‌های درخت:</label>
+      <textarea rows="5" placeholder="ریشه → تنه → شاخه → زیرشاخه → برگ"></textarea>
+    </div>
+
+    <p style="margin-top:15px;color:#8fbfd9;font-size:13px;">
+      این فرم فقط نمایشی است؛ نسخهٔ اجرایی می‌تواند روی هر بک‌اندی سوار شود.
+    </p>
+  </section>
+
+  <!-- قابلیت‌ها -->
+  <section class="card">
+    <h2>قابلیت‌های درخشا</h2>
+
+    <div class="module">
+      <div class="module-title">🧠 جنگل دانش</div>
+      <p>درخت‌های مفهومی که مثل نورون فعال می‌شوند و با هم ارتباط دارند.</p>
+    </div>
+
+    <div class="module">
+      <div class="module-title">⏳ قشر زمانی</div>
+      <p>درک روندها، توالی‌ها و پیش‌بینی علّی.</p>
+    </div>
+
+    <div class="module">
+      <div class="module-title">🎲 گره‌های احتمالاتی</div>
+      <p>جستجوی موازی با Confidence Score و هم‌گرایی بیزی.</p>
+    </div>
+
+    <div class="module">
+      <div class="module-title">🌿 هرس و پیوند پویا</div>
+      <p>مدیریت حافظه فعال با حذف مسیرهای کم‌استفاده و افزودن درخت‌های موقت.</p>
+    </div>
+
+    <div class="module">
+      <div class="module-title">🧩 قشر فراشناخت</div>
+      <p>تنظیم عمق جستجو و هزینهٔ محاسباتی بر اساس پیچیدگی سؤال.</p>
+    </div>
+
+    <div class="module">
+      <div class="module-title">🔗 موتور قیاسی</div>
+      <p>کشف الگوهای مشابه بین حوزه‌ها (مثلاً زیست → فناوری).</p>
+    </div>
+
+  </section>
+
+</main>
+
+<!-- پیام‌های خوش‌آمدگویی -->
+<section class="welcome-box">
+  <h3>جملات خوش‌آمدگویی درخشا</h3>
+  <ul class="list">
+    <li>سلام! خوش اومدی به جنگل دانش درخشا.</li>
+    <li>درخشا آماده‌ست تا هر موضوعی رو برات تحلیل کنه.</li>
+    <li>به دنیای درخت‌ها و نورون‌ها خوش اومدی.</li>
+    <li>اینجا جاییه که دانش، معنا و استدلال به هم می‌رسن.</li>
+    <li>درخشا همیشه آمادهٔ یادگیری از توست.</li>
+    <li>هر سؤال تو یک مسیر جدید در جنگل دانشه.</li>
+    <li>به مرکز استدلال هوشمند خوش اومدی.</li>
+  </ul>
+</section>
+
+<!-- پیام‌های خداحافظی -->
+<section class="bye-box">
+  <h3>جملات خداحافظی درخشا</h3>
+  <ul class="list">
+    <li>فعلاً تا بعد، مسیرهای دانش رو روشن نگه دار.</li>
+    <li>درخشا همیشه اینجاست؛ هر وقت خواستی برگرد.</li>
+    <li>تا دیدار بعدی، نورون‌هات رو فعال نگه دار.</li>
+    <li>جنگل دانش همیشه منتظر قدم‌های توست.</li>
+    <li>به امید ساختن مسیرهای جدید در دفعهٔ بعد.</li>
+    <li>درخشا خاموش نمی‌شه؛ فقط منتظر تو می‌مونه.</li>
+  </ul>
+</section>
+
+<footer>
+  Derakhsha · Modular Knowledge Forest · © 2026
+</footer>
+
+</body>
+</html>
